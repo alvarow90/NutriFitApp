@@ -1,0 +1,38 @@
+﻿@model List<NutriFitApp.Shared.DTOs.UsuarioDTO>
+
+@{
+    ViewData["Title"] = "Lista de Usuarios";
+}
+
+<h2 class="mt-4">Usuarios registrados</h2>
+
+<a class="btn btn-primary mb-3" asp-action="Create">Agregar nuevo usuario</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Nutriólogo</th>
+            <th>Entrenador</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model)
+        {
+            <tr>
+                <td>@usuario.Nombre</td>
+                <td>@usuario.Email</td>
+                <td>@usuario.Rol</td>
+                <td>@usuario.NutriologoId</td>
+                <td>@usuario.EntrenadorId</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@usuario.Id">Editar</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@usuario.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

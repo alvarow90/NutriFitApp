@@ -1,0 +1,31 @@
+﻿@model List<NutriFitApp.Shared.DTOs.DietaDTO>
+
+@{
+    ViewData["Title"] = "Dietas asignadas";
+}
+
+<h2 class="mt-4">Dietas asignadas</h2>
+
+<a asp-action="Asignar" class="btn btn-primary mb-3">Asignar nueva dieta</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Usuario ID</th>
+            <th>Descripción</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dieta in Model)
+        {
+            <tr>
+                <td>@dieta.UsuarioId</td>
+                <td>@dieta.Descripcion</td>
+                <td>@dieta.FechaInicio.ToShortDateString()</td>
+                <td>@dieta.FechaFin.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:NutriFitApp.Mobile.ViewModels" x:Class="NutriFitApp.Mobile.Views.DashboardView"
+             Title="Dashboard">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <Label 
+                Text="¡Bienvenido a NutriFitApp!"
+                FontSize="Header"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Label 
+                Text="Este es tu panel principal. Desde aquí podrás acceder a tus dietas, rutinas y más."
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                FontSize="Medium"/>
+
+            <Button Text="Ir a Mis Dietas (Ejemplo)"
+                    Clicked="OnGoToDietasClicked" 
+                    Margin="0,10"/>
+
+            <Button Text="Cerrar Sesión (Ejemplo)"
+                    Clicked="OnLogoutClicked"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    Margin="0,10"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

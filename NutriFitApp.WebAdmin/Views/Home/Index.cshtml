@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<h2 class="mt-4">Bienvenido al Panel de Administración</h2>
+
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card border-success shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Usuarios</h5>
+                <p class="card-text">Ver y administrar los usuarios registrados.</p>
+                <a asp-controller="Usuarios" asp-action="Index" class="btn btn-outline-success">Ir a usuarios</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card border-primary shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Nutriólogos</h5>
+                <p class="card-text">Administrar cuentas de nutriólogos.</p>
+                <a asp-controller="Nutriologos" asp-action="Index" class="btn btn-outline-primary">Ir a nutriólogos</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card border-info shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Entrenadores</h5>
+                <p class="card-text">Administrar cuentas de entrenadores.</p>
+                <a asp-controller="Entrenadores" asp-action="Index" class="btn btn-outline-info">Ir a entrenadores</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card border-warning shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Dietas</h5>
+                <p class="card-text">Ver o asignar planes de dieta.</p>
+                <a asp-controller="Dietas" asp-action="Index" class="btn btn-outline-warning">Ver dietas</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Rutinas</h5>
+                <p class="card-text">Ver o asignar rutinas de ejercicio.</p>
+                <a asp-controller="Rutinas" asp-action="Index" class="btn btn-outline-danger">Ver rutinas</a>
+            </div>
+        </div>
+    </div>
+</div>

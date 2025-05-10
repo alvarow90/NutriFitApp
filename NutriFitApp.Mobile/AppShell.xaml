@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="NutriFitApp.Mobile.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:NutriFitApp.Mobile.Views"
+    Shell.FlyoutBehavior="Flyout">
+    <ShellContent
+        Route="login"
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginView}" />
+
+    <FlyoutItem Title="Inicio" Icon="home_icon.png">
+        <ShellContent
+            Route="dashboard"
+            Title="Dashboard"
+            ContentTemplate="{DataTemplate views:DashboardView}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Mis Dietas" Icon="diet_icon.png">
+        <ShellContent
+            Route="dietas" Title="Dietas"
+            ContentTemplate="{DataTemplate views:DietasView}" />
+    </FlyoutItem>
+
+</Shell>

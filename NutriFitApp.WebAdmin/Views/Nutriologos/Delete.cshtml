@@ -1,0 +1,18 @@
+﻿@model NutriFitApp.Shared.DTOs.UsuarioDTO
+
+@{
+    ViewData["Title"] = "Eliminar nutriólogo";
+}
+
+<h2 class="mt-4 text-danger">¿Estás seguro de eliminar este nutriólogo?</h2>
+
+<div class="alert alert-warning mt-3">
+    <p><strong>Nombre:</strong> @Model.Nombre</p>
+    <p><strong>Correo:</strong> @Model.Email</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+</form>

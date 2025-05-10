@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NutriFitApp.Mobile.Views.LoginView"
+             Title="Iniciar sesión">
+
+    <VerticalStackLayout Padding="30" Spacing="15">
+        <Label Text="Bienvenido" FontSize="24" HorizontalOptions="Center" />
+
+        <Entry Placeholder="Correo electrónico" 
+               Text="{Binding Email}" 
+               Keyboard="Email" />
+
+        <Entry Placeholder="Contraseña" 
+               Text="{Binding Password}" 
+               IsPassword="True" />
+
+        <Button Text="Iniciar sesión"
+                Command="{Binding LoginCommand}" />
+
+        <Label Text="{Binding ErrorMessage}" 
+               TextColor="Red" 
+               FontAttributes="Italic" />
+    </VerticalStackLayout>
+</ContentPage>

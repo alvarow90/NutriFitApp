@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:NutriFitApp.Mobile.ViewModels" xmlns:dto="clr-namespace:NutriFitApp.Shared.DTOs;assembly=NutriFitApp.Shared" x:Class="NutriFitApp.Mobile.Views.DietasView"
+             x:DataType="vm:DietasViewModel" Title="Mis Dietas">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="10" RowSpacing="10">
+
+        <ActivityIndicator Grid.Row="0" 
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"
+                           Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+
+        <Label Grid.Row="0"
+               Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               Margin="0,5">
+            <Label.Triggers>
+                <DataTrigger TargetType="Label"
+                             Binding="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyStringConverter}}"
+                             Value="True">
+                    <Setter Property="IsVisible" Value="True" />
+                </DataTrigger>
+                <DataTrigger TargetType="Label"
+                             Binding="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyStringConverter}}"
+                             Value="False">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Label.Triggers>
+        </Label>
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Dietas}"
+                        SelectionMode="None" EmptyView="No hay dietas asignadas actualmente.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="dto:DietaDTO">
+                    <Frame Padding="15" Margin="0,0,0,10" CornerRadius="10" BorderColor="{AppThemeBinding Light=LightGray, Dark={StaticResource Gray500}}" BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}" HasShadow="True">
+                        <StackLayout Spacing="8">
+                            <Label FontSize="Medium" FontAttributes="Bold">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Dieta ID: "/>
+                                        <Span Text="{Binding Id}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Descripción: " FontAttributes="Bold"/>
+                                        <Span Text="{Binding Descripcion}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Fecha Inicio: " FontAttributes="Bold"/>
+                                        <Span Text="{Binding FechaInicio, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Fecha Fin: " FontAttributes="Bold"/>
+                                        <Span Text="{Binding FechaFin, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2"
+                Text="Actualizar Dietas"
+                Command="{Binding LoadDietasCommand}" IsEnabled="{Binding IsNotBusy}" Margin="0,10,0,0"
+                HorizontalOptions="Fill"/>
+    </Grid>
+</ContentPage>

@@ -8,8 +8,8 @@
     <ShellContent
         Route="login"
         Title="Login"
-        ContentTemplate="{DataTemplate views:LoginView}" />
-
+        ContentTemplate="{DataTemplate views:LoginView}"
+        FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled" />
     <FlyoutItem Title="Inicio" Icon="home_icon.png">
         <ShellContent
             Route="dashboard"
@@ -19,15 +19,22 @@
 
     <FlyoutItem Title="Mis Dietas" Icon="diet_icon.png">
         <ShellContent
-            Route="dietas" Title="Dietas"
+            Route="dietas" 
+            Title="Dietas"
             ContentTemplate="{DataTemplate views:DietasView}" />
     </FlyoutItem>
 
-
-    <FlyoutItem Title="Mis Rutinas" Icon="tu_icono_rutinas.png">
+    <FlyoutItem Title="Mis Rutinas" Icon="fitness_icon.png">
         <ShellContent
-        Route="rutinas" Title="Rutinas"
-        ContentTemplate="{DataTemplate views:RutinasView}" />
+            Route="rutinas"
+            Title="Rutinas"
+            ContentTemplate="{DataTemplate views:RutinasView}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Mi Perfil" Icon="profile_icon.png">
+        <ShellContent
+            Route="perfil" Title="Perfil de Usuario"
+            ContentTemplate="{DataTemplate views:PerfilView}" />
     </FlyoutItem>
 
 </Shell>

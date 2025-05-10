@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:NutriFitApp.Mobile.ViewModels" xmlns:converters="clr-namespace:NutriFitApp.Mobile.Converters" x:Class="NutriFitApp.Mobile.Views.PerfilView"
+             x:DataType="vm:PerfilViewModel" Title="Mi Perfil">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsNotNullOrEmptyStringConverter x:Key="IsNotNullOrEmptyStringConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
+
+            <Label Text="Información de Perfil" 
+                   FontSize="Title" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   Margin="0,0,0,10"
+                   SemanticProperties.HeadingLevel="Level1"/>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+            <Label Text="{Binding ErrorMessage}" 
+                   TextColor="Red" 
+                   HorizontalOptions="Center">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyStringConverter}}"
+                                 Value="True">
+                        <Setter Property="IsVisible" Value="True" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyStringConverter}}"
+                                 Value="False">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Nombre:" FontAttributes="Bold"/>
+                    <Entry Text="{Binding Nombre}" Placeholder="Ingresa tu nombre"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Apellido:" FontAttributes="Bold"/>
+                    <Entry Text="{Binding Apellido}" Placeholder="Ingresa tu apellido"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Email:" FontAttributes="Bold"/>
+                    <Label Text="{Binding Email}" FontSize="Small"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Rol:" FontAttributes="Bold"/>
+                    <Label Text="{Binding Rol}" FontSize="Small"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Fecha de Nacimiento:" FontAttributes="Bold"/>
+                    <DatePicker Date="{Binding FechaNacimiento}" Format="dd/MM/yyyy"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Altura (cm):" FontAttributes="Bold"/>
+                    <Entry Text="{Binding AlturaCm}" Placeholder="Ej: 175" Keyboard="Numeric"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Peso (kg):" FontAttributes="Bold"/>
+                    <Entry Text="{Binding PesoKg}" Placeholder="Ej: 70.5" Keyboard="Numeric"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Padding="10" CornerRadius="8" BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" Margin="0,5">
+                <StackLayout>
+                    <Label Text="Objetivos:" FontAttributes="Bold"/>
+                    <Editor Text="{Binding Objetivos}" Placeholder="Describe tus objetivos de salud y fitness" AutoSize="TextChanges" HeightRequest="100"/>
+                </StackLayout>
+            </Frame>
+
+            <Button Text="Guardar Cambios" 
+                    Command="{Binding GuardarPerfilCommand}" 
+                    IsEnabled="{Binding IsNotBusy}"
+                    Style="{StaticResource ButtonPrimaryStyle}" Margin="0,20,0,0"/>
+
+            <Button Text="Recargar Perfil" 
+                    Command="{Binding LoadPerfilCommand}" 
+                    IsEnabled="{Binding IsNotBusy}"
+                    Style="{StaticResource ButtonSecondaryStyle}" Margin="0,5,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

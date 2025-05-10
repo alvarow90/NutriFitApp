@@ -1,19 +1,18 @@
 ﻿// Archivo: Controllers/UsuariosController.cs
 // Ubicación: Proyecto NutriFitApp.API
 
-// Usings necesarios
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;    // Si usas UserManager<User> directamente
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;     // Para DbUpdateConcurrencyException y ToListAsync, etc.
-using NutriFitApp.API.Data;          // Para NutriFitDbContext
-using NutriFitApp.API.Helpers;       // Para IUserHelper (si lo sigues usando para algunas operaciones)
-using NutriFitApp.Shared.DTOs;       // Para UsuarioPerfilDTO y ActualizarUsuarioPerfilDTO
-using NutriFitApp.Shared.Models;     // Para la entidad User
-using System.Security.Claims;        // Para User.FindFirstValue
+using NutriFitApp.Shared.DTOs;
+using NutriFitApp.Shared.Models;
+using System.Security.Claims;    // Aunque no lo usemos directamente con Authorize comentado
 using System.Threading.Tasks;
-using System.Linq;                   // Para proyecciones Select
-using Microsoft.AspNetCore.Http;     // Para StatusCodes
+using NutriFitApp.API.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
+using NutriFitApp.API.Helpers;
 
 namespace NutriFitApp.API.Controllers
 {
@@ -22,132 +21,117 @@ namespace NutriFitApp.API.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly NutriFitDbContext _context;
-        private readonly IUserHelper _userHelper; // Asumiendo que todavía usas IUserHelper para algunas cosas
-                                                  // Si no, podrías inyectar UserManager<User> directamente
-                                                  // para operaciones de Identity más complejas si fuera necesario.
+        private readonly IUserHelper _userHelper;
 
-        // Constructor del controlador
         public UsuariosController(NutriFitDbContext context, IUserHelper userHelper)
         {
             _context = context;
             _userHelper = userHelper;
+            Debug.WriteLine("[API UsuariosController] Constructor ejecutado.");
         }
 
-        // --- ENDPOINTS PARA EL PERFIL DE USUARIO ---
+        [HttpGet("ping")]
+        public IActionResult Ping()
+        {
+            Debug.WriteLine("[API UsuariosController] Endpoint GET /api/Usuarios/ping ALCANZADO.");
+            return Ok("Pong desde UsuariosController!");
+        }
 
-        // GET: api/Usuarios/perfil
-        // Obtiene el perfil del usuario actualmente autenticado.
-        [HttpGet("perfil")]
-        [Authorize] // Solo para usuarios autenticados
+        // --- ENDPOINTS PARA EL PERFIL DE USUARIO (CON AUTHORIZE COMENTADO TEMPORALMENTE) ---
+
+        [HttpGet("myprofile")] // Usando la ruta que funcionó en pruebas anteriores
+        // [Authorize] // TEMPORALMENTE COMENTADO PARA AVANZAR EN LA APP MÓVIL
         public async Task<ActionResult<UsuarioPerfilDTO>> GetMiPerfil()
         {
-            // Obtener el ID del usuario desde los claims del token JWT.
-            var userIdString = User.FindFirstValue("userId"); // O ClaimTypes.NameIdentifier, según cómo generes el token.
-            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
-            {
-                return Unauthorized("No se pudo identificar al usuario desde el token.");
-            }
+            Debug.WriteLine("[API UsuariosController] Intentando GET /api/Usuarios/myprofile (Authorize COMENTADO)");
 
-            // Buscar el usuario en la base de datos.
-            var usuario = await _context.Users.FindAsync(userId);
+            // IMPORTANTE: Como [Authorize] está comentado, User.FindFirstValue("userId") DEVOLVERÁ NULL.
+            // Para que esta prueba funcione y puedas ver datos en la app móvil,
+            // necesitas simular un ID de usuario.
+            // ¡CAMBIA ESTE ID POR EL DE UN USUARIO REAL EN TU BASE DE DATOS PARA PROBAR!
+            int userIdParaPrueba = 1; // <--- ¡CAMBIA ESTO AL ID DE UN USUARIO EXISTENTE!
 
+            // var userIdString = User.FindFirstValue("userId"); 
+            // if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
+            // {
+            //     // Esta lógica no se ejecutará como se espera sin [Authorize]
+            // }
+            // else 
+            // {
+            //    userIdParaPrueba = userId; 
+            // }
+            Debug.WriteLine($"[API UsuariosController] GetMiPerfil - Usando UserID de prueba: {userIdParaPrueba}");
+
+            var usuario = await _context.Users.FindAsync(userIdParaPrueba);
             if (usuario == null)
             {
-                return NotFound("Usuario no encontrado.");
+                Debug.WriteLine($"[API UsuariosController] GetMiPerfil - NotFound: Usuario de prueba con ID {userIdParaPrueba} no encontrado.");
+                return NotFound($"Usuario de prueba con ID {userIdParaPrueba} no encontrado. Asegúrate de que este ID exista en tu base de datos.");
             }
 
-            // Mapear la entidad User a UsuarioPerfilDTO.
-            // Este DTO se envía al cliente.
             var perfilDto = new UsuarioPerfilDTO
             {
                 Id = usuario.Id,
                 Email = usuario.Email ?? string.Empty,
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
-                Rol = usuario.Rol, // Asumiendo que la propiedad Rol en la entidad User contiene el rol principal.
-                                   // Si los roles se manejan exclusivamente a través de IdentityRoles,
-                                   // necesitarías obtenerlos usando _userHelper.GetRolesAsync(usuario) o UserManager.
-
-                // Mapear los campos adicionales del perfil
+                Rol = usuario.Rol,
                 FechaNacimiento = usuario.FechaNacimiento,
                 AlturaCm = usuario.AlturaCm,
                 PesoKg = usuario.PesoKg,
                 Objetivos = usuario.Objetivos
             };
-
+            Debug.WriteLine($"[API UsuariosController] GetMiPerfil - Perfil de prueba encontrado y devuelto para Usuario ID: {userIdParaPrueba}.");
             return Ok(perfilDto);
         }
 
-        // PUT: api/Usuarios/perfil
-        // Actualiza el perfil del usuario actualmente autenticado.
-        [HttpPut("perfil")]
-        [Authorize] // Solo para usuarios autenticados
+        [HttpPut("myprofile")]
+        // [Authorize] // TEMPORALMENTE COMENTADO PARA AVANZAR EN LA APP MÓVIL
         public async Task<IActionResult> ActualizarMiPerfil([FromBody] ActualizarUsuarioPerfilDTO actualizarDto)
         {
-            if (!ModelState.IsValid) // Validar el DTO de entrada.
+            Debug.WriteLine("[API UsuariosController] Intentando PUT /api/Usuarios/myprofile (Authorize COMENTADO)");
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            // Obtener el ID del usuario desde los claims del token.
-            var userIdString = User.FindFirstValue("userId"); // O ClaimTypes.NameIdentifier.
-            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int userId))
-            {
-                return Unauthorized("No se pudo identificar al usuario desde el token.");
-            }
+            // IMPORTANTE: Usar un ID de prueba para la actualización.
+            // ¡CAMBIA ESTE ID POR EL DE UN USUARIO REAL EN TU BASE DE DATOS PARA PROBAR!
+            int userIdParaPrueba = 1; // <--- ¡CAMBIA ESTO AL ID DEL USUARIO QUE QUIERES ACTUALIZAR!
+            // var userIdString = User.FindFirstValue("userId"); 
+            // ... (lógica de obtener userId del token comentada) ...
+            Debug.WriteLine($"[API UsuariosController] ActualizarMiPerfil - Usando UserID de prueba: {userIdParaPrueba}");
 
-            // Buscar el usuario en la base de datos.
-            var usuario = await _context.Users.FindAsync(userId);
-
+            var usuario = await _context.Users.FindAsync(userIdParaPrueba);
             if (usuario == null)
             {
-                return NotFound("Usuario no encontrado.");
+                Debug.WriteLine($"[API UsuariosController] ActualizarMiPerfil - NotFound: Usuario de prueba con ID {userIdParaPrueba} no encontrado.");
+                return NotFound($"Usuario de prueba con ID {userIdParaPrueba} no encontrado.");
             }
 
-            // Actualizar las propiedades del usuario con los valores del DTO.
-            // Solo se actualizan los campos que están en ActualizarUsuarioPerfilDTO.
             usuario.Nombre = actualizarDto.Nombre;
             usuario.Apellido = actualizarDto.Apellido;
-
-            // Actualizar campos adicionales del perfil
-            usuario.FechaNacimiento = actualizarDto.FechaNacimiento; // Si es nullable, se asigna directamente.
+            usuario.FechaNacimiento = actualizarDto.FechaNacimiento;
             usuario.AlturaCm = actualizarDto.AlturaCm;
             usuario.PesoKg = actualizarDto.PesoKg;
             usuario.Objetivos = actualizarDto.Objetivos;
-
             try
             {
-                _context.Users.Update(usuario); // Marcar la entidad como modificada.
-                await _context.SaveChangesAsync(); // Guardar los cambios en la base de datos.
+                _context.Users.Update(usuario);
+                await _context.SaveChangesAsync();
+                Debug.WriteLine($"[API UsuariosController] ActualizarMiPerfil - Perfil de prueba actualizado para Usuario ID: {userIdParaPrueba}.");
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                // Manejar posibles excepciones de concurrencia si otro proceso modificó el usuario
-                // al mismo tiempo. Podrías necesitar una estrategia más robusta aquí.
-                // Loggear el error es importante.
-                // El logging no está implementado aquí, pero deberías añadirlo.
-                // Serilog, NLog, o el logging integrado de ASP.NET Core son opciones.
-                System.Diagnostics.Debug.WriteLine($"Error de concurrencia al actualizar perfil: {ex.Message}");
+                Debug.WriteLine($"[API UsuariosController] ActualizarMiPerfil - Error de concurrencia: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el perfil del usuario debido a un conflicto de concurrencia.");
             }
             catch (Exception ex)
             {
-                // Capturar otras posibles excepciones durante el guardado.
-                System.Diagnostics.Debug.WriteLine($"Error al guardar perfil: {ex.Message}");
+                Debug.WriteLine($"[API UsuariosController] ActualizarMiPerfil - Error al guardar: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Ocurrió un error al guardar los cambios en el perfil.");
             }
-
-            return NoContent(); // HTTP 204 No Content indica que la operación fue exitosa y no hay contenido que devolver.
-                                // Alternativamente, podrías devolver Ok(new { Message = "Perfil actualizado exitosamente." });
+            return NoContent();
         }
-
-        // --- Mantén aquí tus otros endpoints existentes de UsuariosController ---
-        // Por ejemplo, los que vi en tu Swagger:
-        // GET /api/Usuarios/test
-        // GET /api/Usuarios/list
-        // GET /api/Usuarios
-        // GET /api/Usuarios/{id}
-        // PUT /api/Usuarios/{id} (Este podría necesitar revisión si es para administradores vs. el usuario actualizando su propio perfil)
-        // DELETE /api/Usuarios/{id}
     }
 }

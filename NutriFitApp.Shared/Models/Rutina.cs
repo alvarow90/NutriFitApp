@@ -17,7 +17,7 @@ namespace NutriFitApp.Shared.Models
         public string Nombre { get; set; } = string.Empty; // Nombre de la rutina
 
         [Required(ErrorMessage = "La descripción de la rutina es obligatoria.")]
-        [MaxLength(1000, ErrorMessage = "La descripción no puede exceder los 1000 caracteres.")] // Aumentado el MaxLength para descripción
+        [MaxLength(1000, ErrorMessage = "La descripción no puede exceder los 1000 caracteres.")]
         public string Descripcion { get; set; } = string.Empty; // Descripción general de la rutina
 
         // Contenido de los ejercicios.

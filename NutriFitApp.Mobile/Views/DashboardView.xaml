@@ -5,29 +5,35 @@
              Title="Dashboard">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="20" Padding="20">
+        <VerticalStackLayout Spacing="15" Padding="25">
 
             <Label 
                 Text="¡Bienvenido a NutriFitApp!"
                 FontSize="Header"
                 FontAttributes="Bold"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center" 
+                SemanticProperties.HeadingLevel="Level1"/>
 
             <Label 
                 Text="Este es tu panel principal. Desde aquí podrás acceder a tus dietas, rutinas y más."
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
-                FontSize="Medium"/>
+                FontSize="Medium"
+                Margin="0,0,0,20"/>
 
-            <Button Text="Ir a Mis Dietas (Ejemplo)"
+            <Button Text="Ver Mis Dietas"
                     Clicked="OnGoToDietasClicked" 
-                    Margin="0,10"/>
+                    Style="{StaticResource ButtonPrimaryStyle}" Margin="0,5"/>
 
-            <Button Text="Cerrar Sesión (Ejemplo)"
+            <Button Text="Ver Mis Rutinas"
+                    Clicked="OnGoToRutinasClicked"
+                    Style="{StaticResource ButtonPrimaryStyle}" Margin="0,5"/>
+
+            <Button Text="Cerrar Sesión"
                     Clicked="OnLogoutClicked"
-                    BackgroundColor="Red"
-                    TextColor="White"
-                    Margin="0,10"/>
+                    BackgroundColor="{StaticResource Red}" TextColor="{StaticResource White}"
+                    Margin="0,20,0,0"
+                    VerticalOptions="EndAndExpand"/>
 
         </VerticalStackLayout>
     </ScrollView>

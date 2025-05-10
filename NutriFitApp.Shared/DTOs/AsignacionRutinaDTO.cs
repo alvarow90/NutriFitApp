@@ -1,8 +1,8 @@
 ﻿// Archivo: DTOs/AsignacionRutinaDTO.cs
 // Ubicación: Proyecto NutriFitApp.Shared
-using NutriFitApp.Shared.DTOs;
+
 using System;
-using System.ComponentModel.DataAnnotations; // Para anotaciones si las necesitas
+using System.ComponentModel.DataAnnotations; // Para anotaciones como [Required]
 
 namespace NutriFitApp.Shared.DTOs
 {
@@ -24,10 +24,10 @@ namespace NutriFitApp.Shared.DTOs
 
         [Required(ErrorMessage = "La duración en días es obligatoria.")]
         [Range(1, 365, ErrorMessage = "La duración debe estar entre 1 y 365 días.")]
-        public int DuracionDias { get; set; } // Propiedad AÑADIDA
+        public int DuracionDias { get; set; } // Duración de la rutina en días
 
-        public DateTime? FechaAsignacion { get; set; } // Opcional, podría ser DateTime.UtcNow en la API
+        public DateTime? FechaAsignacion { get; set; } // Opcional, la API podría usar DateTime.UtcNow por defecto si es null
 
-        // EntrenadorId NO se incluye aquí, ya que se tomará del token del entrenador autenticado.
+        // EntrenadorId NO se incluye aquí, ya que se tomará del token del entrenador autenticado en la API.
     }
 }

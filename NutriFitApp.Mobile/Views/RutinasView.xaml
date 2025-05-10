@@ -1,10 +1,91 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NutriFitApp.Mobile.Views.RutinasView"
-             Title="Rutinas">
+             xmlns:vm="clr-namespace:NutriFitApp.Mobile.ViewModels" xmlns:dto="clr-namespace:NutriFitApp.Shared.DTOs;assembly=NutriFitApp.Shared" x:Class="NutriFitApp.Mobile.Views.RutinasView"
+             x:DataType="vm:RutinasViewModel" Title="Mis Rutinas">
 
-    <VerticalStackLayout Padding="20">
-        <Label Text="Aquí van tus rutinas" FontSize="24" HorizontalOptions="Center"/>
-    </VerticalStackLayout>
+    <Grid RowDefinitions="Auto, *, Auto" Padding="10" RowSpacing="10">
+
+        <StackLayout Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Start">
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"
+                               HorizontalOptions="Center" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   HorizontalOptions="Center"
+                   Margin="0,5">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyStringConverter}}"
+                                 Value="True">
+                        <Setter Property="IsVisible" Value="True" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label"
+                                 Binding="{Binding ErrorMessage, Converter={StaticResource IsNotNullOrEmptyStringConverter}}"
+                                 Value="False">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+        </StackLayout>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Rutinas}"
+                        SelectionMode="None" EmptyView="No tienes rutinas asignadas actualmente.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="dto:RutinaDTO">
+                    <Frame Padding="15" 
+                           Margin="0,0,0,10" 
+                           CornerRadius="10" 
+                           BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}" 
+                           BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}" 
+                           HasShadow="True">
+                        <StackLayout Spacing="8">
+                            <Label Text="{Binding Nombre}" FontSize="Large" FontAttributes="Bold" />
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Descripción: " FontAttributes="Bold"/>
+                                        <Span Text="{Binding Descripcion}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Duración: " FontAttributes="Bold"/>
+                                        <Span Text="{Binding DuracionDias}"/>
+                                        <Span Text=" días"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Ejercicios: " FontAttributes="Bold"/>
+                                        <Span Text="{Binding Ejercicios}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label IsVisible="{Binding FechaAsignacion, Converter={StaticResource IsNotNullConverter}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Asignada el: " FontAttributes="Bold"/>
+                                        <Span Text="{Binding FechaAsignacion, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2"
+                Text="Actualizar Rutinas"
+                Command="{Binding LoadRutinasCommand}" IsEnabled="{Binding IsNotBusy}" Margin="0,10,0,0"
+                HorizontalOptions="Fill"/>
+    </Grid>
 </ContentPage>

@@ -63,6 +63,14 @@ namespace NutriFitApp.Mobile
             // Registra otras Vistas aquí (ej. DashboardView).
 
 
+            // En MauiProgram.cs
+            // ...
+            builder.Services.AddSingleton<IRutinaService, RutinaService>(); // O AddTransient
+            builder.Services.AddTransient<RutinasViewModel>();
+            builder.Services.AddTransient<RutinasView>();
+            // ...
+
+
             // Configuración de Logging (opcional, pero útil para depuración).
 #if DEBUG
             builder.Logging.AddDebug(); // Habilita el logging a la ventana de depuración en modo DEBUG.

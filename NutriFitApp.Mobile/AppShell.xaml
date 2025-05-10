@@ -23,4 +23,11 @@
             ContentTemplate="{DataTemplate views:DietasView}" />
     </FlyoutItem>
 
+
+    <FlyoutItem Title="Mis Rutinas" Icon="tu_icono_rutinas.png">
+        <ShellContent
+        Route="rutinas" Title="Rutinas"
+        ContentTemplate="{DataTemplate views:RutinasView}" />
+    </FlyoutItem>
+
 </Shell>

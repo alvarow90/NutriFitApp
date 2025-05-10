@@ -1,59 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NutriFitApp.Shared.DTOs;
-using NutriFitApp.WebAdmin.ViewModels;
-using NutriFitApp.WebAdmin.Helpers;
-using System.Net.Http.Json;
+﻿// Archivo: DTOs/AsignacionRutinaDTO.cs
+// Ubicación: Proyecto NutriFitApp.Shared
 
-namespace NutriFitApp.WebAdmin.Controllers
+using System;
+using System.ComponentModel.DataAnnotations; // Para anotaciones como [Required]
+
+namespace NutriFitApp.Shared.DTOs
 {
-    public class RutinasController : Controller
+    public class AsignacionRutinaDTO
     {
-        private readonly HttpClient _http;
+        [Required(ErrorMessage = "El ID del usuario es obligatorio.")]
+        public int UsuarioId { get; set; } // ID del usuario al que se asigna la rutina
 
-        public RutinasController(IHttpClientFactory factory)
-        {
-            _http = factory.CreateClient("ApiClient");
-        }
+        [Required(ErrorMessage = "El nombre de la rutina es obligatorio.")]
+        [MaxLength(100, ErrorMessage = "El nombre no puede exceder los 100 caracteres.")]
+        public string Nombre { get; set; } = string.Empty;
 
-        // Mostrar lista de rutinas
-        public async Task<IActionResult> Index()
-        {
-            var rutinas = await _http.GetFromJsonAsync<List<RutinaDTO>>("rutinas");
-            return View(rutinas);
-        }
+        [Required(ErrorMessage = "La descripción es obligatoria.")]
+        [MaxLength(1000, ErrorMessage = "La descripción no puede exceder los 1000 caracteres.")]
+        public string Descripcion { get; set; } = string.Empty;
 
-        // Mostrar formulario
-        [HttpGet]
-        public IActionResult Asignar()
-        {
-            return View(new AsignarRutinaViewModel());
-        }
+        [Required(ErrorMessage = "Debe especificar los ejercicios.")]
+        public string Ejercicios { get; set; } = string.Empty; // Contenido de los ejercicios
 
-        // Procesar formulario
-        [HttpPost]
-        public async Task<IActionResult> Asignar(AsignarRutinaViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
+        [Required(ErrorMessage = "La duración en días es obligatoria.")]
+        [Range(1, 365, ErrorMessage = "La duración debe estar entre 1 y 365 días.")]
+        public int DuracionDias { get; set; } // Duración de la rutina en días
 
-            var dto = new AsignacionRutinaDTO
-            {
-                UsuarioId = model.UsuarioId,
-                EntrenadorId = model.EntrenadorId,
-                Descripcion = model.Descripcion,
-                DuracionDias = model.DuracionDias
-            };
+        public DateTime? FechaAsignacion { get; set; } // Opcional, la API podría usar DateTime.UtcNow por defecto si es null
 
-            var response = await _http.PostAsJsonAsync("rutinas/asignar", dto);
-
-            if (response.IsSuccessStatusCode)
-            {
-                AlertHelper.Success(TempData, "Rutina asignada correctamente.");
-                return RedirectToAction("Index");
-            }
-
-            AlertHelper.Error(TempData, "Error al asignar la rutina.");
-            return View(model);
-        }
+        // EntrenadorId NO se incluye aquí, ya que se tomará del token del entrenador autenticado en la API.
     }
 }
